@@ -1,0 +1,29 @@
+{
+  "//": "把这些 hooks 合并进你的项目 .claude/settings.json。",
+  "//path": "把 /ABS/PATH 换成 tools/cc-bridge 的绝对路径，并 chmod +x hooks/*.sh。",
+  "//matcher": "PreToolUse 的 matcher 决定哪些工具走语音批准；默认只拦会改动系统的工具，只读工具(Read/Grep/Glob)照常放行。",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|NotebookEdit|mcp__.*",
+        "hooks": [
+          { "type": "command", "command": "/ABS/PATH/tools/cc-bridge/hooks/pretooluse.sh", "timeout": 600 }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          { "type": "command", "command": "/ABS/PATH/tools/cc-bridge/hooks/notification.sh", "timeout": 10 }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "/ABS/PATH/tools/cc-bridge/hooks/stop.sh", "timeout": 10 }
+        ]
+      }
+    ]
+  }
+}

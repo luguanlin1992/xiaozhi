@@ -1,0 +1,18 @@
+# 复制为 config.toml 并填写。环境变量同名(大写)可覆盖这里。
+
+# 小智官方云 MCP 接入点地址（在 xiaozhi.me 账号后台 -> MCP 接入点 获取）
+xiaozhi_mcp_endpoint = "wss://api.xiaozhi.me/mcp/?token=YOUR_TOKEN"
+
+# 固件 CcNotifyServer 地址：小智设备在局域网里的 IP（设备日志里会打印）
+device_ip = "192.168.1.50"
+device_port = 8930
+
+# 运行交互式 claude 的 tmux 会话名：tmux new -s cc claude
+tmux_session = "cc"
+
+# 本地 hook 接收服务
+hook_host = "127.0.0.1"
+hook_port = 8788
+
+# PreToolUse 阻塞等待语音裁决的超时秒数（略小于 Claude Code 的 600s 上限）
+permission_timeout = 590.0

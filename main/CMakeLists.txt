@@ -36,6 +36,7 @@ set(SOURCES "audio/audio_codec.cc"
             "settings.cc"
             "device_state_machine.cc"
             "assets.cc"
+            "cc_notify_server.cc"
             "main.cc"
             )
 
@@ -1048,6 +1049,7 @@ idf_component_register(SRCS ${SOURCES}
                         esp_driver_jpeg
                         esp_driver_ppa
                         esp_app_format
+                        esp_http_server
                         app_update
                         spi_flash
                         console

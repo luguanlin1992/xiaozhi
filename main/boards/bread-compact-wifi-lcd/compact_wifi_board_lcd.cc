@@ -9,6 +9,9 @@
 #include "mcp_server.h"
 #include "lamp_controller.h"
 #include "led/single_led.h"
+#if CC_NOTIFY_ENABLED
+#include "cc_notify_server.h"
+#endif
 
 #include <esp_log.h>
 #include <driver/i2c_master.h>
@@ -65,6 +68,9 @@ private:
  
     Button boot_button_;
     LcdDisplay* display_;
+#if CC_NOTIFY_ENABLED
+    CcNotifyServer* cc_notify_server_ = nullptr;
+#endif
 
     void InitializeSpi() {
         spi_bus_config_t buscfg = {};
@@ -139,6 +145,16 @@ private:
         static LampController lamp(LAMP_GPIO);
     }
 
+#if CC_NOTIFY_ENABLED
+    void InitializeCcNotifyServer() {
+        cc_notify_server_ = new CcNotifyServer();
+        if (!cc_notify_server_->Start(CC_NOTIFY_PORT)) {
+            delete cc_notify_server_;
+            cc_notify_server_ = nullptr;
+        }
+    }
+#endif
+
 public:
     CompactWifiBoardLCD() :
         boot_button_(BOOT_BUTTON_GPIO) {
@@ -146,6 +162,9 @@ public:
         InitializeLcdDisplay();
         InitializeButtons();
         InitializeTools();
+#if CC_NOTIFY_ENABLED
+        InitializeCcNotifyServer();
+#endif
         if (DISPLAY_BACKLIGHT_PIN != GPIO_NUM_NC) {
             GetBacklight()->RestoreBrightness();
         }

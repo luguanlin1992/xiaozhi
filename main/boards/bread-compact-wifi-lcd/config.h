@@ -296,4 +296,9 @@
 // A MCP Test: Control a lamp
 #define LAMP_GPIO GPIO_NUM_18
 
+// Claude Code 本地通知服务：PC 上的 cc-bridge 通过 LAN POST /notify 推送事件，
+// 设备本地响铃 + 屏幕提示。设 0 可关闭。
+#define CC_NOTIFY_ENABLED   1
+#define CC_NOTIFY_PORT      8930
+
 #endif // _BOARD_CONFIG_H_
