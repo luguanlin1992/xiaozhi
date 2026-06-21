@@ -71,6 +71,7 @@ class McpEndpoint:
     async def run_forever(self) -> None:
         if not self.endpoint:
             log.warning("未配置 XIAOZHI_MCP_ENDPOINT，MCP 接入点未启动（仅 hook/设备提示可用）")
+            await asyncio.Event().wait()  # 保持进程存活，继续提供 hook/设备提示
             return
         backoff = 1.0
         while True:
