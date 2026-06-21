@@ -105,6 +105,8 @@ class McpEndpoint:
         if method == "notifications/initialized" or (method and method.startswith("notifications/")):
             return None
 
+        if method in ("initialize", "tools/list"):
+            log.info("MCP 握手: %s", method)
         if method == "initialize":
             return _ok(msg_id, {
                 "protocolVersion": msg.get("params", {}).get("protocolVersion", PROTOCOL_VERSION),
@@ -122,6 +124,7 @@ class McpEndpoint:
             params = msg.get("params", {}) or {}
             name = params.get("name", "")
             args = params.get("arguments", {}) or {}
+            log.info("语音调用工具: %s %s", name, args)
             try:
                 text = await self._dispatch(name, args)
                 return _ok(msg_id, {"content": [{"type": "text", "text": text}]})
