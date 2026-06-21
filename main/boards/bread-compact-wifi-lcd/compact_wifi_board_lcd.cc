@@ -162,9 +162,6 @@ public:
         InitializeLcdDisplay();
         InitializeButtons();
         InitializeTools();
-#if CC_NOTIFY_ENABLED
-        InitializeCcNotifyServer();
-#endif
         if (DISPLAY_BACKLIGHT_PIN != GPIO_NUM_NC) {
             GetBacklight()->RestoreBrightness();
         }
@@ -175,6 +172,15 @@ public:
         static SingleLed led(BUILTIN_LED_GPIO);
         return &led;
     }
+
+#if CC_NOTIFY_ENABLED
+    // 在网络协议栈(esp_netif/tcpip)初始化之后再启动 HTTP 通知服务，
+    // 否则在构造函数里 httpd_start 会触发 tcpip "Invalid mbox" 断言。
+    virtual void StartNetwork() override {
+        WifiBoard::StartNetwork();
+        InitializeCcNotifyServer();
+    }
+#endif
 
     virtual AudioCodec* GetAudioCodec() override {
 #if AUDIO_I2S_USE_PDM_MIC
