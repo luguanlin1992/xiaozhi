@@ -517,6 +517,8 @@ void McpServer::DoToolCall(int id, const std::string& tool_name, const cJSON* to
         return;
     }
 
+    ESP_LOGI(TAG, "tools/call: %s", tool_name.c_str());
+
     PropertyList arguments = (*tool_iter)->properties();
     try {
         for (auto& argument : arguments) {

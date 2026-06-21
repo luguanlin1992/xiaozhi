@@ -5,11 +5,11 @@
 #define TAG "I2cDevice"
 
 
-I2cDevice::I2cDevice(i2c_master_bus_handle_t i2c_bus, uint8_t addr) {
+I2cDevice::I2cDevice(i2c_master_bus_handle_t i2c_bus, uint8_t addr, uint32_t scl_speed_hz) {
     i2c_device_config_t i2c_device_cfg = {
         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
         .device_address = addr,
-        .scl_speed_hz = 400 * 1000,
+        .scl_speed_hz = scl_speed_hz,
         .scl_wait_us = 0,
         .flags = {
             .disable_ack_check = 0,
@@ -19,17 +19,29 @@ I2cDevice::I2cDevice(i2c_master_bus_handle_t i2c_bus, uint8_t addr) {
     assert(i2c_device_ != NULL);
 }
 
-void I2cDevice::WriteReg(uint8_t reg, uint8_t value) {
+esp_err_t I2cDevice::WriteRegEx(uint8_t reg, uint8_t value) {
     uint8_t buffer[2] = {reg, value};
-    ESP_ERROR_CHECK(i2c_master_transmit(i2c_device_, buffer, 2, 100));
+    return i2c_master_transmit(i2c_device_, buffer, 2, 100);
+}
+
+void I2cDevice::WriteReg(uint8_t reg, uint8_t value) {
+    ESP_ERROR_CHECK(WriteRegEx(reg, value));
+}
+
+esp_err_t I2cDevice::ReadRegEx(uint8_t reg, uint8_t* value) {
+    return i2c_master_transmit_receive(i2c_device_, &reg, 1, value, 1, 100);
 }
 
 uint8_t I2cDevice::ReadReg(uint8_t reg) {
     uint8_t buffer[1];
-    ESP_ERROR_CHECK(i2c_master_transmit_receive(i2c_device_, &reg, 1, buffer, 1, 100));
+    ESP_ERROR_CHECK(ReadRegEx(reg, buffer));
     return buffer[0];
 }
 
 void I2cDevice::ReadRegs(uint8_t reg, uint8_t* buffer, size_t length) {
     ESP_ERROR_CHECK(i2c_master_transmit_receive(i2c_device_, &reg, 1, buffer, length, 100));
+}
+
+esp_err_t I2cDevice::TransmitEx(const uint8_t* data, size_t length, int timeout_ms) {
+    return i2c_master_transmit(i2c_device_, data, length, timeout_ms);
 }
