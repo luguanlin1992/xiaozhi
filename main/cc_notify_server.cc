@@ -22,17 +22,17 @@ void CcNotifyServer::ShowNotification(const char* level, const char* title, cons
     const char* message = (text != nullptr) ? text : "";
 
     const char* emotion = "neutral";
-    std::string_view sound = Lang::Sounds::OGG_POPUP;
+    std::string_view sound = Lang::Sounds::OGG_CC_PERMISSION;
     if (level != nullptr) {
         if (strcmp(level, "permission") == 0) {
             emotion = "thinking";
-            sound = Lang::Sounds::OGG_EXCLAMATION;
+            sound = Lang::Sounds::OGG_CC_PERMISSION;
         } else if (strcmp(level, "question") == 0) {
             emotion = "thinking";
-            sound = Lang::Sounds::OGG_POPUP;
+            sound = Lang::Sounds::OGG_CC_PERMISSION;
         } else if (strcmp(level, "done") == 0) {
             emotion = "happy";
-            sound = Lang::Sounds::OGG_SUCCESS;
+            sound = Lang::Sounds::OGG_CC_PERMISSION;
         }
     }
 
